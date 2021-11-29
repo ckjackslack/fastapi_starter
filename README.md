@@ -5,7 +5,7 @@
 - TortoiseORM (todo)
 - OAuth2 + JWT (todo)
 - aiohttp (todo)
-- simple REST / CRU api (partially finished: GET, POST, DELETE available)
+- simple REST / CRUD api (partially finished: GET, POST, DELETE available)
 
 #### If you have Linux, there is a bash script which will pull the image, build the container and run the app:
 ```sh

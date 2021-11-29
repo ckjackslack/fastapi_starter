@@ -1,0 +1,60 @@
+{
+    "artists": [
+        {
+            "name": "Queen",
+            "singer_gender": "male",
+            "albums": [
+                {
+                    "title": "Innuendo",
+                    "release_date": "1991-02-04"
+                },
+                {
+                    "title": "A Night at the Opera",
+                    "release_date": "1975-12-02"
+                }
+            ]
+        },
+        {
+            "name": "Panic! At The Disco",
+            "singer_gender": "male",
+            "albums": [
+                {
+                    "title": "Death of a Bachelor",
+                    "release_date": "2016-01-15"
+                },
+                {
+                    "title": "Pray for the Wicked",
+                    "release_date": "2018-06-22"
+                },
+                {
+                    "title": "Too Weird to Live, Too Rare to Die!",
+                    "release_date": "2013-10-08"
+                }
+            ]
+        },
+        {
+            "name": "Pink Floyd",
+            "singer_gender": "male",
+            "albums": [
+                {
+                    "title": "The Wall",
+                    "release_date": "1979-12-08"
+                },
+                {
+                    "title": "The Dark Side of the Moon",
+                    "release_date": "1973-03-01"
+                }
+            ]
+        },
+        {
+            "name": "Madonna",
+            "singer_gender": "female",
+            "albums": [
+                {
+                    "title": "Like a Virgin",
+                    "release_date": "1984-11-12"
+                }
+            ]
+        }
+    ]
+}
