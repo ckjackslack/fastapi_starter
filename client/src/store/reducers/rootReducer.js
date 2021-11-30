@@ -1,4 +1,4 @@
-import { GET_PIZZAS, SET_MESSAGE } from "./types";
+import { GET_PIZZAS, SET_MESSAGE } from "../types";
 
 const initialStat = {
   pizzas: [],
