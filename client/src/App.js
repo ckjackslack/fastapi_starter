@@ -8,7 +8,7 @@ const App = () => {
     getAll();
   }, []);
   return (
-    pizzas.map(item => <h3 key={item.id}>{item.name}</h3>)
+    pizzas && pizzas.map(item => <h3 key={item.id}>{item.name}</h3>)
   );
 }
 
