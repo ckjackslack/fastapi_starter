@@ -182,7 +182,7 @@ async def run_queries():
 
 async def init():
     await Tortoise.init(
-        db_url = DB_CONNECTION_STRING,
+        db_url = DB_CONNECTION_STRING.format(filename = 'music'),
         modules = { 'models': [__name__] }
     )
     await Tortoise.generate_schemas()

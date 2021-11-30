@@ -1,14 +1,15 @@
-from pydantic import BaseModel, Field
-from typing import List
-from itertools import count
+from tortoise.contrib.pydantic import pydantic_model_creator
+from tortoise import Tortoise
+from pydantic import BaseModel
+from models import Pizza
+from pprint import pprint
 
-ID_GEN = count(start = 1)
-
-class PizzaIn(BaseModel):
+class Topping_Pydantic(BaseModel):
     name: str
-    toppings: List[str]
 
-class Pizza(BaseModel):
-    name: str
-    toppings: List[str]
-    id: int = Field(default_factory = lambda: next(ID_GEN))
+Tortoise.init_models(['models'], 'models')
+Pizza_Pydantic = pydantic_model_creator(Pizza, name = 'Pizza')
+PizzaIn_Pydantic = pydantic_model_creator(Pizza,
+    name = 'PizzaIn', exclude_readonly = True)
+
+# pprint(Pizza_Pydantic.schema())

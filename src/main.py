@@ -1,34 +1,49 @@
-from fastapi import FastAPI, Response, status
-from typing import List
-from models import db
-from schemas import Pizza, PizzaIn
+import logging
+
+from fastapi import FastAPI
+
+from tortoise import Tortoise
+from tortoise.contrib.fastapi import register_tortoise
+
+from config import DB_CONNECTION_STRING
+from models import populate_db
+from pizza import router as PizzaRouter
+
+log = logging.getLogger(__name__)
+
+async def init_db(app: FastAPI) -> None:
+    TORTOISE_ORM = {
+        'connections': {
+            'default': DB_CONNECTION_STRING\
+                .format(filename = 'pizza'),
+        },
+        'apps': {
+            'models': {
+                'models': ['models'],
+                'default_connection': 'default',
+            },
+        },
+    }
+    await Tortoise.init(config = TORTOISE_ORM)
+    await Tortoise.generate_schemas()
+
+    register_tortoise(
+        app,
+        config = TORTOISE_ORM,
+        generate_schemas = True,
+        add_exception_handlers = True,
+    )
+    await populate_db()
 
 app = FastAPI()
+app.include_router(PizzaRouter, prefix = '/pizza')
 
-@app.get('/pizzas')
-async def all_pizzas() -> List[Pizza]:
-    return db
+@app.on_event('startup')
+async def startup_event():
+    log.info('Initializing database.')
+    await init_db(app)
 
-@app.post('/pizzas')
-async def new_pizza(pizza: PizzaIn, response: Response):
-    pizza_name = pizza.name.strip().lower()
-    if pizza_name not in { p.name.lower() for p in db }:
-        obj = Pizza(name = pizza.name, toppings = pizza.toppings)
-        db.append(obj)
-        response.status_code = status.HTTP_201_CREATED
-        return obj
-    else:
-        response.status_code = status.HTTP_409_CONFLICT
-        return {'error': 'Pizza with given name already exists.'}
-
-@app.delete('/pizzas/{pizza_id}')
-async def delete_pizza(pizza_id: int, response: Response):
-    deleted = False
-    for idx, pizza in enumerate(db):
-        if pizza.id == pizza_id:
-            del db[idx]
-            deleted = True
-            response.status_code = status.HTTP_204_NO_CONTENT
-    if not deleted:
-        response.status_code = status.HTTP_404_NOT_FOUND
-        return {'error': 'Pizza with given id does not exist.'}
+@app.on_event('shutdown')
+async def shutdown_event():
+    await Tortoise.close_connections()
+    log.info('Shutting down application.')
