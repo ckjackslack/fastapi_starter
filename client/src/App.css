@@ -26,6 +26,18 @@
   margin: 24px 16px;
   padding: 24;
   min-height: calc(100vh - 112px);
+  position: relative;
+}
+
+.site-layout .site-layout-background.site-layout-background--content .ant-spin {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
 }
 
 .ant-layout-header .trigger {
