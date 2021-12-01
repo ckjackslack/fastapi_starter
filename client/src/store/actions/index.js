@@ -1,12 +1,10 @@
 import { GET_PIZZAS } from "../types";
 
-const getAll = payload => {
+const getAll = (payload) => {
   return {
     type: GET_PIZZAS,
-    payload
-  }
-}
-
-export {
-  getAll
+    payload,
+  };
 };
+
+export { getAll };
