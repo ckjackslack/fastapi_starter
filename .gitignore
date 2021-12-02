@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 ./client/node_modules/
+./client/yarn.lock
