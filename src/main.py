@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from tortoise import Tortoise
 from tortoise.contrib.fastapi import register_tortoise
@@ -15,8 +16,7 @@ log = logging.getLogger(__name__)
 async def init_db(app: FastAPI) -> None:
     TORTOISE_ORM = {
         'connections': {
-            'default': DB_CONNECTION_STRING\
-                .format(filename = 'pizza'),
+            'default': DB_CONNECTION_STRING,
         },
         'apps': {
             'models': {
@@ -45,6 +45,8 @@ app.add_middleware(
     allow_methods = ['*'],
     allow_headers = ['*'],
 )
+app.mount('/static', StaticFiles(directory = '../static'),
+    name = 'static')
 
 @app.on_event('startup')
 async def startup_event():

@@ -1,18 +1,38 @@
+import aiofiles
+import os
+
 from typing import List
 
 from fastapi import (HTTPException, APIRouter, Response,
-    Depends, status)
+    Depends, BackgroundTasks, File, UploadFile, Body,
+    status)
+from fastapi.responses import JSONResponse
 from tortoise.contrib.fastapi import HTTPNotFoundError
 from tortoise.exceptions import OperationalError, DoesNotExist
+from celery.result import AsyncResult
 
 from models import Pizza, Topping, Chef, populate_db
 from schemas import Pizza_Pydantic, PizzaIn_Pydantic, Topping_Pydantic
+from services import write_message, save_static_file
+from config import ALLOWED_UPLOAD_TYPES, STATIC_DIR
+from tasks import create_task
 
 router = APIRouter()
 
 @router.get('/', response_model = List[Pizza_Pydantic])
 async def all_pizzas():
     return await Pizza.all().prefetch_related('toppings', 'chef')
+
+@router.get('/task')
+async def long_running_task(message: str, background_tasks: BackgroundTasks):
+    background_tasks.add_task(write_message, message)
+    return {'message': 'Message is added.'}
+
+@router.post('/task')
+async def run_long_task(payload = Body(...)):
+    task_type = payload['type']
+    task = create_task.delay(int(task_type))
+    return JSONResponse({'task_id': task.id})
 
 @router.get('/{pizza_id}')
 async def single_pizza(pizza_id: int) -> Pizza_Pydantic:
@@ -40,3 +60,11 @@ async def delete_pizza(pizza_id: int, response: Response):
         return {'error': 'Pizza with given id does not exist.'}
     else:
         response.status_code = status.HTTP_204_NO_CONTENT
+
+@router.post("/uploadfile/")
+async def create_upload_file(response: Response, file: UploadFile = File(...)):
+    if file.content_type not in ALLOWED_UPLOAD_TYPES:
+        response.status_code = status.HTTP_405_METHOD_NOT_ALLOWED
+        return {'error': 'This file extension is not allowed.'}
+    await save_static_file(file)
+    return {'message': 'OK'}
