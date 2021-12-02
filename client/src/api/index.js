@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const Api = {
-  getAll: () => axios.get("pizzas"),
+  getAll: () => axios.get("pizza"),
 };
 
 export default Api;
