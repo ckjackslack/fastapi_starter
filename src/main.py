@@ -10,6 +10,7 @@ from tortoise.contrib.fastapi import register_tortoise
 from config import DB_CONNECTION_STRING
 from models import populate_db
 from pizza import router as PizzaRouter
+from services import SingletonAioHttp
 
 log = logging.getLogger(__name__)
 
@@ -52,8 +53,10 @@ app.mount('/static', StaticFiles(directory = '../static'),
 async def startup_event():
     log.info('Initializing database.')
     await init_db(app)
+    SingletonAioHttp.get_client()
 
 @app.on_event('shutdown')
 async def shutdown_event():
     await Tortoise.close_connections()
     log.info('Shutting down application.')
+    await SingletonAioHttp.close_client()

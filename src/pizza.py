@@ -15,7 +15,7 @@ from celery.result import AsyncResult
 
 from models import Pizza, Topping, Chef, populate_db
 from schemas import Pizza_Pydantic, PizzaIn_Pydantic, Topping_Pydantic
-from services import write_message, save_static_file
+from services import SingletonAioHttp, write_message, save_static_file
 from config import ALLOWED_UPLOAD_TYPES, STATIC_DIR
 from tasks import create_task
 
@@ -51,6 +51,12 @@ async def simple_template(request: Request):
         'text': 42
     }
     return templates.TemplateResponse('page.html', context)
+
+@router.get('/external')
+async def get_external_data():
+    url = 'http://jsonplaceholder.typicode.com/todos/1'
+    rst = await SingletonAioHttp.query_url(url)
+    return rst
 
 @router.websocket('/ws')
 async def websocket_endpoint(websocket: WebSocket):
