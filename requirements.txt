@@ -1,13 +1,18 @@
 aiofiles==0.8.0
+aiohttp==3.8.1
+aiosignal==1.2.0
 aiosqlite==0.17.0
 amqp==2.6.1
 anyio==3.4.0
 asgiref==3.4.1
+async-timeout==4.0.1
 asyncpg==0.25.0
+attrs==21.2.0
 bcrypt==3.2.0
 billiard==3.6.4.0
 celery==4.4.7
 cffi==1.15.0
+charset-normalizer==2.0.8
 click==8.0.3
 click-didyoumean==0.3.0
 click-plugins==1.1.1
@@ -19,6 +24,7 @@ et-xmlfile==1.1.0
 fastapi==0.70.0
 flower==0.9.7
 fonttools==4.28.2
+frozenlist==1.2.0
 h11==0.12.0
 h2==4.1.0
 hpack==4.0.0
@@ -26,10 +32,13 @@ humanize==3.13.1
 hyperframe==6.0.1
 idna==3.3
 iso8601==0.1.16
+Jinja2==3.0.3
 jwt==1.3.1
 kiwisolver==1.3.2
 kombu==4.6.11
+MarkupSafe==2.0.1
 matplotlib==3.5.0
+multidict==5.2.0
 networkx==2.6.3
 numpy==1.21.4
 openpyxl==3.0.9
@@ -67,3 +76,4 @@ wsproto==1.0.0
 xlrd==2.0.1
 xlutils==2.0.0
 xlwt==1.3.0
+yarl==1.7.2

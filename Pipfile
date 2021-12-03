@@ -72,6 +72,16 @@ humanize = "==3.13.1"
 prometheus-client = "==0.8.0"
 tornado = "==6.1"
 asyncpg = "==0.25.0"
+Jinja2 = "==3.0.3"
+MarkupSafe = "==2.0.1"
+aiohttp = "==3.8.1"
+aiosignal = "==1.2.0"
+async-timeout = "==4.0.1"
+attrs = "==21.2.0"
+charset-normalizer = "==2.0.8"
+frozenlist = "==1.2.0"
+multidict = "==5.2.0"
+yarl = "==1.7.2"
 
 [dev-packages]
 

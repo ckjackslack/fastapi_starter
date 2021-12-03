@@ -2,11 +2,13 @@ import aiofiles
 import os
 
 from typing import List
+from collections import namedtuple
 
 from fastapi import (HTTPException, APIRouter, Response,
     Depends, BackgroundTasks, File, UploadFile, Body,
-    status)
-from fastapi.responses import JSONResponse
+    Request, WebSocket, status)
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import JSONResponse, HTMLResponse
 from tortoise.contrib.fastapi import HTTPNotFoundError
 from tortoise.exceptions import OperationalError, DoesNotExist
 from celery.result import AsyncResult
@@ -17,7 +19,10 @@ from services import write_message, save_static_file
 from config import ALLOWED_UPLOAD_TYPES, STATIC_DIR
 from tasks import create_task
 
+Item = namedtuple('Item', 'label qty')
+
 router = APIRouter()
+templates = Jinja2Templates(directory = '../templates')
 
 @router.get('/', response_model = List[Pizza_Pydantic])
 async def all_pizzas():
@@ -33,6 +38,26 @@ async def run_long_task(payload = Body(...)):
     task_type = payload['type']
     task = create_task.delay(int(task_type))
     return JSONResponse({'task_id': task.id})
+
+@router.get('/template')
+async def simple_template(request: Request):
+    context = {
+        'request': request,
+        'items': [
+            Item(label = 'Eggs', qty = 12),
+            Item(label = 'Milk', qty = 1),
+            Item(label = 'Bread', qty = 1)
+        ],
+        'text': 42
+    }
+    return templates.TemplateResponse('page.html', context)
+
+@router.websocket('/ws')
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"Message text was: {data}")
 
 @router.get('/{pizza_id}')
 async def single_pizza(pizza_id: int) -> Pizza_Pydantic:
