@@ -7,7 +7,7 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-import httpx
+import httpx2
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -29,7 +29,7 @@ log = logging.getLogger(__name__)
 def create_app(
     settings: Settings | None = None,
     *,
-    http_client: httpx.AsyncClient | None = None,
+    http_client: httpx2.AsyncClient | None = None,
     broker: AsyncBroker | None = None,
 ) -> FastAPI:
     """Build the app. Tests pass their own settings, a mocked HTTP client and/or a broker."""

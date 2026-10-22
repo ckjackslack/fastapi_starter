@@ -65,7 +65,7 @@ class Settings(BaseSettings):
     # Taskiq broker. Empty = in-process broker (dev/tests); ``redis://...`` = real worker.
     broker_url: str = ""
 
-    # Outgoing HTTP demo (httpx).
+    # Outgoing HTTP demo (httpx2).
     external_api_url: str = "https://jsonplaceholder.typicode.com"
     external_api_timeout: float = 5.0
 
