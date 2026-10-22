@@ -1,0 +1,61 @@
+# Full stack: API + Taskiq worker + Postgres + Redis.
+#   docker compose up --build
+#   docker compose exec api fastapi-starter seed
+# API on http://localhost:8000 (docs at /docs). The React client runs outside compose
+# (cd client && npm run dev) and proxies /api to localhost:8000.
+
+x-app-env: &app-env
+  APP_ENVIRONMENT: prod
+  APP_DATABASE_URL: postgresql+asyncpg://starter:starter@postgres:5432/starter
+  APP_BROKER_URL: redis://redis:6379/0
+  APP_UPLOAD_DIR: /data/uploads
+  APP_MESSAGE_LOG: /data/messages.log
+  APP_CORS_ORIGINS: http://localhost:5173
+
+services:
+  api:
+    build: .
+    environment: *app-env
+    ports:
+      - "8000:8000"
+    volumes:
+      - app-data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build: .
+    command: ["fastapi-starter", "worker"]
+    environment: *app-env
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: starter
+      POSTGRES_PASSWORD: starter
+      POSTGRES_DB: starter
+    volumes:
+      - pg-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U starter -d starter"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:8-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  app-data:
+  pg-data:
