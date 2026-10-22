@@ -10,6 +10,7 @@ import shutil
 import sys
 from collections.abc import Sequence
 from importlib.resources import files
+from pathlib import Path
 from typing import TextIO
 
 from starlette.routing import BaseRoute
@@ -97,6 +98,7 @@ def cmd_serve(args: argparse.Namespace, settings: Settings, out: TextIO) -> int:
         host=args.host,
         port=args.port,
         reload=args.reload,
+        reload_dirs=[str(Path(__file__).resolve().parent)] if args.reload else None,
         log_level=settings.log_level.lower(),
         proxy_headers=True,
     )
