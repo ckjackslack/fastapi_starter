@@ -1,4 +1,0 @@
-const GET_PIZZAS = "GET_PIZZAS";
-const SET_MESSAGE = "SET_MESSAGE";
-
-export { GET_PIZZAS, SET_MESSAGE };

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block body %}
+<h1>{{ app_name }}</h1>
+<p>Server-rendered with Jinja2. {{ total }} pizza{{ "" if total == 1 else "s" }} in the database.</p>
+
+<section>
+  <h2>Pizzas</h2>
+  {% if pizzas %}
+  <ul class="pizzas">
+    {% for pizza in pizzas %}
+    <li>
+      <strong>{{ pizza.name }}</strong>
+      {% if pizza.chef %}<span class="muted">by {{ pizza.chef.name }}</span>{% endif %}
+      <div class="muted">{{ pizza.toppings | map(attribute="name") | join(", ") or "no toppings" }}</div>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="muted">No pizzas yet. Run <code>fastapi-starter seed</code> or POST to <code>/api/pizzas</code>.</p>
+  {% endif %}
+</section>
+
+<section>
+  <h2>WebSocket echo</h2>
+  <form id="chat">
+    <input id="message" autocomplete="off" placeholder="Say something" aria-label="Message">
+    <button>Send</button>
+  </form>
+  <ul id="messages"></ul>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', path='js/chat.js') }}"></script>
+{% endblock %}
